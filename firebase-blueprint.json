@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "Wedding": {
+      "title": "Event",
+      "description": "Information about an event (Wedding, Birthday, etc).",
+      "type": "object",
+      "properties": {
+        "event_type": { "type": "string", "enum": ["Wedding", "Birthday Party", "Other"], "description": "Type of the event." },
+        "event_name": { "type": "string", "description": "Custom name for 'Other' event types." },
+        "couple_name": { "type": "string", "description": "Names of the couple or host." },
+        "wedding_date": { "type": "string", "format": "date", "description": "Date of the event." },
+        "created_by": { "type": "string", "description": "UID of the user who created the event." },
+        "created_at": { "type": "string", "format": "date-time", "description": "Timestamp when the event was created." }
+      },
+      "required": ["event_type", "couple_name", "wedding_date", "created_by", "created_at"]
+    },
+    "Gift": {
+      "title": "Gift",
+      "description": "Details of a gift received at a wedding.",
+      "type": "object",
+      "properties": {
+        "guest_name": { "type": "string", "description": "Name of the guest who gave the gift." },
+        "amount": { "type": "number", "description": "Amount of the gift." },
+        "relation": { "type": "string", "enum": ["Immediate family", "Extended family", "Close friend", "Colleague", "Other"], "description": "Relation of the guest to the couple." },
+        "gift_type": { "type": "string", "enum": ["Cash envelope", "Check", "Venmo/Zelle/Digital"], "description": "Type of the gift." },
+        "note": { "type": "string", "description": "Optional note about the gift." },
+        "logged_by": { "type": "string", "description": "UID of the user who logged the gift." },
+        "logged_at": { "type": "string", "format": "date-time", "description": "Timestamp when the gift was logged." },
+        "reciprocity_status": { "type": "string", "enum": ["pending", "upcoming", "fulfilled"], "description": "Status for reciprocity tracking." },
+        "their_event_type": { "type": "string", "description": "Type of the guest's upcoming event." },
+        "their_event_date": { "type": "string", "format": "date", "description": "Date of the guest's upcoming event." }
+      },
+      "required": ["guest_name", "amount", "relation", "gift_type", "logged_by", "logged_at", "reciprocity_status"]
+    },
+    "WeddingMember": {
+      "title": "Wedding Member",
+      "description": "A user who has access to a wedding.",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string", "description": "UID of the user." },
+        "invited_email": { "type": "string", "format": "email", "description": "Email of the invited user." },
+        "role": { "type": "string", "enum": ["owner", "member"], "description": "Role of the user in the wedding." }
+      },
+      "required": ["user_id", "invited_email", "role"]
+    }
+  },
+  "firestore": {
+    "/weddings/{weddingId}": {
+      "schema": "Wedding",
+      "description": "Collection of weddings."
+    },
+    "/weddings/{weddingId}/gifts/{giftId}": {
+      "schema": "Gift",
+      "description": "Gifts for a specific wedding."
+    },
+    "/weddings/{weddingId}/members/{memberId}": {
+      "schema": "WeddingMember",
+      "description": "Members with access to a specific wedding."
+    }
+  }
+}
